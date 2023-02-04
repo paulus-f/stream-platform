@@ -1,0 +1,36 @@
+<h1>Show Stream</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.stream_show_path(@socket, :show, @stream)}>
+    <.live_component
+      module={HomeServiceStreamingWeb.StreamLive.FormComponent}
+      id={@stream.id}
+      title={@page_title}
+      action={@live_action}
+      stream={@stream}
+      return_to={Routes.stream_show_path(@socket, :show, @stream)}
+    />
+  </.modal>
+<% end %>
+
+
+<ul>
+
+  <li>
+    <%= @stream.title %> |
+    <span> <%= live_redirect "Back", to: Routes.stream_index_path(@socket, :index) %> </span>
+  </li>
+
+</ul>
+
+<video id="local-video" playsinline autoplay muted width="600"></video>
+
+<h1>Stream Chat</h1>
+<div class="messages" style="border: 1px solid #eee; height: 200px; overflow: scroll; margin-bottom: 8px;">
+  <!-- messages go here -->
+</div>
+<form phx-submit="send-chat-message">
+  <input type="text" name="text" />
+  <button type="submit">Send</button>
+</form>
+
