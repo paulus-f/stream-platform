@@ -53,14 +53,18 @@ defmodule HomeServiceStreamingWeb.LiveHelpers do
     """
   end
 
-  def assign_defaults(%{"user_id" => user_id}, socket) do
-    socket = assign(socket, current_user: Accounts.get_user!(user_id))
+  def assign_defaults(%{"user_token" => user_token}, socket) do
+    socket = assign(socket, current_user: Accounts.get_user_by_session_token(user_token))
 
     if socket.assigns.current_user do
       socket
     else
-      redirect(socket, to: "/login")
+      redirect(socket, to: "/users/log_in")
     end
+  end
+
+  def assign_defaults(_, socket) do
+    redirect(socket, to: "/users/log_in")
   end
 
   defp hide_modal(js \\ %JS{}) do
