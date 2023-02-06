@@ -4,6 +4,7 @@ defmodule HomeServiceStreaming.Streams.Stream do
 
   schema "streams" do
     field :title, :string
+    has_many :messages, Message
 
     timestamps()
   end
