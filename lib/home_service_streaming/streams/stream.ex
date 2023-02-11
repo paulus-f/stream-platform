@@ -2,6 +2,8 @@ defmodule HomeServiceStreaming.Streams.Stream do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias HomeServiceStreaming.Messages.Message
+
   schema "streams" do
     field :title, :string
     has_many :messages, Message

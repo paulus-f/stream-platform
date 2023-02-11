@@ -2,6 +2,7 @@ defmodule HomeServiceStreamingWeb.StreamLive.Show do
   use HomeServiceStreamingWeb, :live_view
 
   alias HomeServiceStreaming.Streams
+  alias HomeServiceStreaming.Messages
 
   @impl true
   def mount(_params, session, socket) do
@@ -10,10 +11,14 @@ defmodule HomeServiceStreamingWeb.StreamLive.Show do
 
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
-    {:noreply,
-     socket
-     |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:stream, Streams.get_stream!(id))}
+    {
+      :noreply,
+      socket
+      |> assign(:page_title, page_title(socket.assigns.live_action))
+      |> assign(:username, socket.assigns.current_user.email)
+      |> assign(:stream, Streams.get_stream!(id))
+      |> assign(:messages, Messages.get_messages_by_stream!(id))
+    }
   end
 
   @impl true
