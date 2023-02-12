@@ -1,38 +1,53 @@
 defmodule HomeServiceStreamingWeb.StreamLive.Show do
   use HomeServiceStreamingWeb, :live_view
 
-  alias HomeServiceStreaming.Streams
   alias HomeServiceStreaming.Messages
+  alias HomeServiceStreaming.Streams
 
   @impl true
-  def mount(_params, session, socket) do
-    {:ok, assign_defaults(session, socket)}
+  def mount(%{"id" => id}, session, socket) do
+    socket = assign_defaults(session, socket)
+
+    socket = socket
+    |> assign(:page_title, page_title(socket.assigns.live_action))
+    |> assign(:username, socket.assigns.current_user.email)
+    |> assign(:id, id)
+    |> assign(:stream, Streams.get_stream!(id))
+    |> assign(:messages, Messages.get_messages_by_stream!(id))
+
+    id
+    |> chat_topic
+     |> HomeServiceStreamingWeb.Endpoint.subscribe
+
+    {:ok, socket}
   end
 
   @impl true
-  def handle_params(%{"id" => id}, _, socket) do
-    {
-      :noreply,
-      socket
-      |> assign(:page_title, page_title(socket.assigns.live_action))
-      |> assign(:username, socket.assigns.current_user.email)
-      |> assign(:stream, Streams.get_stream!(id))
-      |> assign(:messages, Messages.get_messages_by_stream!(id))
-    }
-  end
+  def handle_event("send-stream-chat-message", %{"text" => text}, socket) do
+    message = Messages.create_message(
+      %{
+        body: text,
+        user_id: socket.assigns.current_user.id,
+        stream_id: socket.assigns.stream.id
+      }
+    )
 
-  @impl true
-  def handle_event("send", %{"text" => text}, socket) do
-    HomeServiceStreamingWeb.Endpoint.broadcast(topic(), "message", %{
-      text: text,
-      name: socket.assigns.username
-    })
+    topic = chat_topic(socket.assigns.id)
+
+    HomeServiceStreamingWeb.Endpoint.broadcast(topic, "new-stream-chat-message", message)
 
     {:noreply, socket}
   end
 
-  defp username, do: "User #{:rand.uniform(100)}"
-  defp topic, do: "chat"
+  @impl true
+  def handle_info(%{event: "new-stream-chat-message", payload: message}, socket) do
+    {:noreply, assign(socket, messages: socket.assigns.messages ++ [message])}
+  end
+
+  defp chat_topic(id) do
+    "stream_chat_#{id}"
+  end
+
   defp page_title(:show), do: "Show Stream"
   defp page_title(:edit), do: "Edit Stream"
 end

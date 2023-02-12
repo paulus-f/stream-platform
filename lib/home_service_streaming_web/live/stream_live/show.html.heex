@@ -13,7 +13,6 @@
   </.modal>
 <% end %>
 
-
 <ul>
 
   <li>
@@ -31,8 +30,7 @@
     <p style="margin: 2px;"><b><%= m.user.email %></b>: <%= m.body %></p>
   <% end %>
 </div>
-<form phx-submit="send-chat-message">
+<form phx-submit="send-stream-chat-message">
   <input type="text" name="text" />
   <button type="submit">Send</button>
 </form>
-

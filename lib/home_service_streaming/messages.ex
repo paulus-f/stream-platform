@@ -41,6 +41,7 @@ defmodule HomeServiceStreaming.Messages do
     Message
       |> where(stream_id: ^id)
       |> Repo.all()
+      |> Repo.preload([:user, :stream])
   end
 
   @doc """
@@ -58,6 +59,7 @@ defmodule HomeServiceStreaming.Messages do
   def create_message(attrs \\ %{}) do
     %Message{}
     |> Message.changeset(attrs)
+    |> Ecto.Changeset.cast_assoc(:user)
     |> Repo.insert()
   end
 

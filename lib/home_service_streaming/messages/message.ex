@@ -14,7 +14,7 @@ defmodule HomeServiceStreaming.Messages.Message do
   @doc false
   def changeset(message, attrs) do
     message
-    |> cast(attrs, [])
-    |> validate_required([])
+    |> cast(attrs, [:body, :stream_id, :user_id])
+    |> validate_required([:body, :stream_id, :user_id])
   end
 end
