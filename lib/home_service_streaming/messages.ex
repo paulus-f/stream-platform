@@ -1,3 +1,5 @@
+require Logger
+
 defmodule HomeServiceStreaming.Messages do
   @moduledoc """
   The Streams context.
@@ -39,9 +41,10 @@ defmodule HomeServiceStreaming.Messages do
 
   def get_messages_by_stream!(id) do
     Message
-      |> where(stream_id: ^id)
-      |> Repo.all()
-      |> Repo.preload([:user, :stream])
+    |> where(stream_id: ^id)
+    |> order_by(desc: :id)
+    |> Repo.all()
+    |> Repo.preload([:user, :stream])
   end
 
   @doc """
@@ -57,9 +60,13 @@ defmodule HomeServiceStreaming.Messages do
 
   """
   def create_message(attrs \\ %{}) do
-    %Message{}
+    Logger.info("Create message attrs: #{inspect(attrs)}")
+
+    %Message{
+      stream: attrs[:stream],
+      user: attrs[:user]
+    }
     |> Message.changeset(attrs)
-    |> Ecto.Changeset.cast_assoc(:user)
     |> Repo.insert()
   end
 
