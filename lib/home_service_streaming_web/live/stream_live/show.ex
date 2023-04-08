@@ -13,7 +13,7 @@ defmodule HomeServiceStreamingWeb.StreamLive.Show do
     socket =
       socket
       |> assign(:page_title, page_title(socket.assigns.live_action))
-      |> assign(:username, socket.assigns.current_user.email)
+      |> assign(:current_user, socket.assigns.current_user)
       |> assign(:id, id)
       |> assign(:stream, Streams.get_stream!(id))
       |> assign(:messages, Messages.get_messages_by_stream!(id))

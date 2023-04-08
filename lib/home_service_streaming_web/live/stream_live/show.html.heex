@@ -24,13 +24,19 @@
 
 <video id="local-video" playsinline autoplay muted width="600"></video>
 
-<h1>Stream Chat as <%= @username %> </h1>
+<%= if @current_user do %>
+  <h1>Stream Chat as <%= @current_user.email %> </h1>
+<% end %>
+
 <div class="messages" style="border: 1px solid #eee; height: 200px; overflow: scroll; margin-bottom: 8px;">
   <%= for m <- @messages do %>
     <p style="margin: 2px;"><b><%= m.user.email %></b>: <%= m.body %></p>
   <% end %>
 </div>
-<form phx-submit="send-stream-chat-message">
-  <input type="text" name="text" />
-  <button type="submit">Send</button>
+
+<%= if @current_user do %>
+  <form phx-submit="send-stream-chat-message">
+    <input type="text" name="text" />
+    <button type="submit">Send</button>
 </form>
+<% end %>
