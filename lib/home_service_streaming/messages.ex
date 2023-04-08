@@ -47,6 +47,12 @@ defmodule HomeServiceStreaming.Messages do
     |> Repo.preload([:user, :stream])
   end
 
+  def create_and_get_messages_by_stream!(attrs, stream_id) do
+    create_message(attrs)
+
+    get_messages_by_stream!(stream_id)
+  end
+
   @doc """
   Creates a stream.
 

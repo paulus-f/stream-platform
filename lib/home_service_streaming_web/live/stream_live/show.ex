@@ -27,16 +27,16 @@ defmodule HomeServiceStreamingWeb.StreamLive.Show do
 
   @impl true
   def handle_event("send-stream-chat-message", %{"text" => text}, socket) do
-    Messages.create_message(%{
+    message = %{
       body: text,
       user: socket.assigns.current_user,
       user_id: socket.assigns.current_user.id,
       stream_id: socket.assigns.stream.id,
       stream: socket.assigns.stream
-    })
+    }
 
     topic = chat_topic(socket.assigns.id)
-    messages = Messages.get_messages_by_stream!(socket.assigns.id)
+    messages = Messages.create_and_get_messages_by_stream!(message, socket.assigns.id)
 
     HomeServiceStreamingWeb.Endpoint.broadcast(topic, "new-stream-chat-message", messages)
 
