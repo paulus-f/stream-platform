@@ -1,3 +1,5 @@
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+
 <h1>Show Stream</h1>
 
 <%= if @live_action in [:edit] do %>
@@ -38,5 +40,20 @@
   <form phx-submit="send-stream-chat-message">
     <input type="text" name="text" />
     <button type="submit">Send</button>
-</form>
+  </form>
 <% end %>
+
+<script>
+  var video = document.getElementById('local-video');
+  var videoSrc = window.location.origin + `/video/index.m3u8`;
+  if (Hls.isSupported()) {
+    var hls = new Hls();
+    console.log('HLS is working');
+    console.log(hls);
+
+    hls.loadSource(videoSrc);
+    hls.attachMedia(video);
+  } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    video.src = videoSrc;
+  }
+</script>
