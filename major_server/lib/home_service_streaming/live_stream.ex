@@ -9,7 +9,6 @@ defmodule HomeServiceStreaming.LiveStream do
   def handle_init(name) do
     path = Path.join('priv/static/live_stream')
     File.mkdir_p!(path)
-
     Process.register(self(), :live_stream)
 
     children %{
@@ -19,7 +18,7 @@ defmodule HomeServiceStreaming.LiveStream do
         target_window_duration: :infinity,
         muxer_segment_duration: 5 |> Membrane.Time.seconds(),
         persist?: true,
-        storage: %Membrane.HTTPAdaptiveStream.Storages.FileStorge{directory: path}
+        storage: %Membrane.HTTPAdaptiveStream.Storages.FileStorage{directory: path}
       }
     }
 
@@ -46,7 +45,7 @@ defmodule HomeServiceStreaming.LiveStream do
     |> Map.put(ref, true)
 
     if Enum.count(started) >= 2 do
-      Phoenix.PubSub.broadcast!(HomeServiceStreaming.PubSub, "livestream:#{state.name}", :started)
+      Phoenix.PubSub.broadcast!(HomeServiceStreaming.PubSub, "live_stream:#{state.name}", :started)
     end
 
     {:ok, Map.put(state, :started, started)}
@@ -58,7 +57,7 @@ defmodule HomeServiceStreaming.LiveStream do
     ended = [true | ended]
 
     if Enum.count(ended) >= 2 do
-      Phoenix.PubSub.broadcast!(HomeServiceStreaming.PubSub, "livestream:#{state.name}", :ended)
+      Phoenix.PubSub.broadcast!(HomeServiceStreaming.PubSub, "live_stream:#{state.name}", :ended)
     end
 
     {:ok, Map.put(state, :started, started)}

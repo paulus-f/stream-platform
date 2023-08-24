@@ -24,7 +24,18 @@
 
 </ul>
 
-<video id="local-video" playsinline autoplay muted width="600"></video>
+<%= if @started? do %>
+  <video id="local-video" phx-hook="LiveVideoAdded" data-path="{Routes.static_path(@index_path)}" width="600"></video>
+
+  <%= if @live? do %>
+    <div class="absolute bottom-2 right-2 color-u-pink">
+      Live!
+    </div>
+  <% end %>
+<% else %>
+  <p class="mt-8 w-1/2 mx-auto text-center"> Nothing yet </p>
+<% end %>
+
 
 <%= if @current_user do %>
   <h1>Stream Chat as <%= @current_user.email %> </h1>
@@ -44,16 +55,16 @@
 <% end %>
 
 <script>
-  var video = document.getElementById('local-video');
-  var videoSrc = window.location.origin + `/video/index.m3u8`;
-  if (Hls.isSupported()) {
-    var hls = new Hls();
-    console.log('HLS is working');
-    console.log(hls);
+  // var video = document.getElementById('local-video');
+  // var videoSrc = window.location.origin + `/video/index.m3u8`;
+  // if (Hls.isSupported()) {
+  //   var hls = new Hls();
+  //   console.log('HLS is working');
+  //   console.log(hls);
 
-    hls.loadSource(videoSrc);
-    hls.attachMedia(video);
-  } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    video.src = videoSrc;
-  }
+  //   hls.loadSource(videoSrc);
+  //   hls.attachMedia(video);
+  // } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+  //   video.src = videoSrc;
+  // }
 </script>

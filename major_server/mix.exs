@@ -51,7 +51,9 @@ defmodule HomeServiceStreaming.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:ecto_psql_extras, "~> 0.6"},
-      {:membrane_core, "~> 0.11.0"}
+      {:membrane_core, "~> 0.12.7"},
+      {:membrane_http_adaptive_stream_plugin, "~> 0.15.0"},
+      {:membrane_rtmp_plugin, "~> 0.15.0"}
     ]
   end
 
