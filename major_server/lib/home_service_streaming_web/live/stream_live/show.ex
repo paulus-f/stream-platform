@@ -8,14 +8,14 @@ defmodule HomeServiceStreamingWeb.StreamLive.Show do
 
   @impl true
   def mount(%{"id" => id}, session, socket) do
-    index_path = Path.join(["/live_stream", id, "index.m3u8"])
-    local_path = Path.join("priv/static/", index_path)
-    started? = case File.stat(local_path) do
-      {:ok, _} -> true
-      _ -> true
-    end
+    # index_path = Path.join(["/live_stream", id, "index.m3u8"])
+    # local_path = Path.join("priv/static/", index_path)
+    # # started? = case File.stat(local_path) do
+    #   {:ok, _} -> true
+    #   _ -> true
+    # end
 
-    Phoenix.PubSub.subscribe(HomeServiceStreamingWeb.PubSub, "live_stream:#{id}")
+    # Phoenix.PubSub.subscribe(HomeServiceStreamingWeb.PubSub, "live_stream:#{id}")
 
     socket = assign_defaults(session, socket)
 
@@ -27,11 +27,10 @@ defmodule HomeServiceStreamingWeb.StreamLive.Show do
       |> assign(:stream, Streams.get_stream!(id))
       |> assign(:messages, Messages.get_messages_by_stream!(id))
       |> assign(
-        index_path: index_path,
         type_body_tag: "video",
         immersive?: true,
         live?: false,
-        started?: started?
+        started?: false #started?
       )
 
     id
@@ -68,16 +67,15 @@ defmodule HomeServiceStreamingWeb.StreamLive.Show do
     {:noreply, assign(socket, messages: messages)}
   end
 
-  @impl true
+  @impl false
   def handle_info(:started, socket) do
     {:noreply, assign(socket, started?: true, live?: true)}
   end
 
-  @impl true
+  @impl false
   def handle_info(:ended, socket) do
     {:noreply, assign(socket, started?: true, live?: false)}
   end
-
 
   defp chat_topic(id) do
     "stream_chat_#{id}"

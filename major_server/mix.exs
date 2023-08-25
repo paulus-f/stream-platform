@@ -5,7 +5,7 @@ defmodule HomeServiceStreaming.MixProject do
     [
       app: :home_service_streaming,
       version: "0.1.0",
-      elixir: "~> 1.12",
+      elixir: "~> 1.15",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -51,9 +51,8 @@ defmodule HomeServiceStreaming.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:ecto_psql_extras, "~> 0.6"},
-      {:membrane_core, "~> 0.12.7"},
-      {:membrane_http_adaptive_stream_plugin, "~> 0.15.0"},
-      {:membrane_rtmp_plugin, "~> 0.15.0"}
+      {:plug, "~> 1.0"},
+      {:corsica, "~> 2.0"}
     ]
   end
 

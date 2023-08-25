@@ -1,4 +1,4 @@
-<script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
 <h1>Show Stream</h1>
 
@@ -24,18 +24,23 @@
 
 </ul>
 
-<%= if @started? do %>
-  <video id="local-video" phx-hook="LiveVideoAdded" data-path="{Routes.static_path(@index_path)}" width="600"></video>
+<div class="container">
+  <video id="player" controls autoplay class="Player" width="600"></video>
+</div>
 
-  <%= if @live? do %>
-    <div class="absolute bottom-2 right-2 color-u-pink">
-      Live!
-    </div>
-  <% end %>
-<% else %>
-  <p class="mt-8 w-1/2 mx-auto text-center"> Nothing yet </p>
-<% end %>
+<script>
+  var video = document.getElementById('player');
+  // TODO: To add constants
+  var videoSrc = 'http://localhost:4005/rtmp/video/index.m3u8';
 
+  if (Hls.isSupported()) {
+    var hls = new Hls();
+    hls.loadSource(videoSrc);
+    hls.attachMedia(video);
+  } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    video.src = videoSrc;
+  }
+</script>
 
 <%= if @current_user do %>
   <h1>Stream Chat as <%= @current_user.email %> </h1>
@@ -53,18 +58,3 @@
     <button type="submit">Send</button>
   </form>
 <% end %>
-
-<script>
-  // var video = document.getElementById('local-video');
-  // var videoSrc = window.location.origin + `/video/index.m3u8`;
-  // if (Hls.isSupported()) {
-  //   var hls = new Hls();
-  //   console.log('HLS is working');
-  //   console.log(hls);
-
-  //   hls.loadSource(videoSrc);
-  //   hls.attachMedia(video);
-  // } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-  //   video.src = videoSrc;
-  // }
-</script>

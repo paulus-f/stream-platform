@@ -32,3 +32,5 @@ home_service_streaming-*.tar
 npm-debug.log
 /assets/node_modules/
 
+/output/
+/.elixir_ls/

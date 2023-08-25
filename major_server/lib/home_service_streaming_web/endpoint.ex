@@ -12,6 +12,18 @@ defmodule HomeServiceStreamingWeb.Endpoint do
 
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
 
+  # TODO: To Fix
+  # plug Corsica,
+  # origins: [
+  #   "http://localhost:4000",
+  #   "http://localhost:8000",
+  #   "http://localhost:8080"
+  # ],
+  # allow_headers: ["accept", "content-type", "authorization"],
+  # allow_credentials: true,
+  # log: [rejected: :error, invalid: :warn, accepted: :debug]
+  plug Corsica, origins: "*", allow_credentials: true
+
   # Serve at "/" the static files from "priv/static" directory.
   #
   # You should set gzip to true if you are running phx.digest
