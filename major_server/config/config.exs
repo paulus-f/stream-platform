@@ -38,6 +38,10 @@ config :esbuild,
     cd: Path.expand("../assets", __DIR__),
     env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
   ]
+config :rtmp_server,
+  output: "/Users/pavel.fedarovich/Project/stream-platform/rtmp_server/output",
+  endpoint: "http://localhost:4005/rtmp/video",
+  video_stream: "index.m3u8"
 
 # Configures Elixir's Logger
 config :logger, :console,

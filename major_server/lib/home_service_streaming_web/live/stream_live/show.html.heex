@@ -16,31 +16,22 @@
 <% end %>
 
 <ul>
-
   <li>
     <%= @stream.title %> |
     <span> <%= live_redirect "Back", to: Routes.stream_index_path(@socket, :index) %> </span>
   </li>
-
 </ul>
 
 <div class="container">
-  <video id="player" controls autoplay class="Player" width="600"></video>
+  <video
+    controls
+    autoplay
+    id="player"
+    data-endpoint={@rtmp_endpoint}
+    class="Player"
+    width="600">
+  </video>
 </div>
-
-<script>
-  var video = document.getElementById('player');
-  // TODO: To add constants
-  var videoSrc = 'http://localhost:4005/rtmp/video/index.m3u8';
-
-  if (Hls.isSupported()) {
-    var hls = new Hls();
-    hls.loadSource(videoSrc);
-    hls.attachMedia(video);
-  } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    video.src = videoSrc;
-  }
-</script>
 
 <%= if @current_user do %>
   <h1>Stream Chat as <%= @current_user.email %> </h1>
@@ -58,3 +49,16 @@
     <button type="submit">Send</button>
   </form>
 <% end %>
+
+<script>
+  var video = document.getElementById('player');
+  var videoSrc = video.dataset.endpoint;
+
+  if (Hls.isSupported()) {
+    var hls = new Hls();
+    hls.loadSource(videoSrc);
+    hls.attachMedia(video);
+  } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    video.src = videoSrc;
+  }
+</script>

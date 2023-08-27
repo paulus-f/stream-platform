@@ -8,12 +8,15 @@ defmodule HomeServiceStreamingWeb.StreamLive.Show do
 
   @impl true
   def mount(%{"id" => id}, session, socket) do
-    # index_path = Path.join(["/live_stream", id, "index.m3u8"])
-    # local_path = Path.join("priv/static/", index_path)
-    # # started? = case File.stat(local_path) do
-    #   {:ok, _} -> true
-    #   _ -> true
-    # end
+    base_path = Application.get_env(:rtmp_server, :output)
+    Application.get_env(:rtmp_server, :endpoint)
+
+    stream_path = Path.join([base_path, id, "index.m3u8"])
+
+    started? = case File.stat(stream_path) do
+      {:ok, _} -> true
+      _ -> true
+    end
 
     # Phoenix.PubSub.subscribe(HomeServiceStreamingWeb.PubSub, "live_stream:#{id}")
 
@@ -30,7 +33,8 @@ defmodule HomeServiceStreamingWeb.StreamLive.Show do
         type_body_tag: "video",
         immersive?: true,
         live?: false,
-        started?: false #started?
+        started?: started?, #started?
+        rtmp_endpoint: Application.get_env(:rtmp_server, :endpoint) <> "/" <> id <> "/" <> Application.get_env(:rtmp_server, :video_stream)
       )
 
     id
