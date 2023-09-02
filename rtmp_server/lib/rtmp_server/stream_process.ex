@@ -4,7 +4,7 @@ defmodule RtmpServer.StreamProcess do
   alias Membrane.RTMP.SourceBin
 
   @impl true
-  def handle_init(_context, socket: socket) do
+  def handle_init(_context, socket: socket, path: path) do
     structure = [
       child(:src, %SourceBin{socket: socket})
       |> via_out(:audio)
@@ -15,7 +15,7 @@ defmodule RtmpServer.StreamProcess do
         manifest_module: Membrane.HTTPAdaptiveStream.HLS,
         target_window_duration: :infinity,
         persist?: false,
-        storage: %Membrane.HTTPAdaptiveStream.Storages.FileStorage{directory: "output"}
+        storage: %Membrane.HTTPAdaptiveStream.Storages.FileStorage{directory: path}
       }),
       get_child(:src)
       |> via_out(:video)

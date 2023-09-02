@@ -20,7 +20,7 @@ defmodule HomeServiceStreaming.MixProject do
   def application do
     [
       mod: {HomeServiceStreaming.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :httpoison]
     ]
   end
 
@@ -52,6 +52,7 @@ defmodule HomeServiceStreaming.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:ecto_psql_extras, "~> 0.6"},
       {:plug, "~> 1.0"},
+      {:httpoison, "~> 2.1"},
       {:corsica, "~> 2.0"}
     ]
   end

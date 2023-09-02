@@ -3,6 +3,7 @@ defmodule HomeServiceStreaming.Accounts.User do
   import Ecto.Changeset
 
   alias HomeServiceStreaming.Messages.Message
+  alias HomeServiceStreaming.Streams.Stream
 
   schema "users" do
     field :email, :string
@@ -10,6 +11,7 @@ defmodule HomeServiceStreaming.Accounts.User do
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
     has_many :messages, Message
+    has_many :streams, Stream
 
     timestamps()
   end

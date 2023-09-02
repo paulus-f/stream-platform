@@ -13,27 +13,27 @@ defmodule RtmpServer.Application do
   def start(_type, _args) do
     File.mkdir_p("output")
 
-    tcp_server_options = %TcpServer{
-      port: @port,
-      listen_options: [
-        :binary,
-        packet: :raw,
-        active: false,
-        ip: @local_ip
-      ],
-      socket_handler: fn socket ->
-        {:ok, _sup, pid} = RtmpServer.StreamProcess.start_link(socket: socket)
-        {:ok, pid}
-      end
-    }
+    # tcp_server_options = %TcpServer{
+    #   port: @port,
+    #   listen_options: [
+    #     :binary,
+    #     packet: :raw,
+    #     active: false,
+    #     ip: @local_ip
+    #   ],
+    #   socket_handler: fn socket ->
+    #     {:ok, _sup, pid} = RtmpServer.StreamProcess.start_link(socket: socket)
+    #     {:ok, pid}
+    #   end
+    # }
 
     children = [
       # Start the Tcp Server
       # RTMP server,
-      %{
-        id: TcpServer,
-        start: {TcpServer, :start_link, [tcp_server_options]}
-      },
+      # %{
+      #   id: TcpServer,
+      #   start: {TcpServer, :start_link, [tcp_server_options]}
+      # },
       # Start the Telemetry supervisor
       RtmpServerWeb.Telemetry,
       # Start the PubSub system

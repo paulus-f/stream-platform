@@ -5,7 +5,9 @@ defmodule HomeServiceStreamingWeb.StreamLive.Index do
   alias HomeServiceStreaming.Streams.Stream
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(_params, session, socket) do
+    socket = assign_defaults(session, socket)
+
     {:ok, assign(socket, :streams, list_streams())}
   end
 
@@ -23,6 +25,7 @@ defmodule HomeServiceStreamingWeb.StreamLive.Index do
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "New Stream")
+    |> assign(:user_id, socket.assigns.current_user.id)
     |> assign(:stream, %Stream{})
   end
 

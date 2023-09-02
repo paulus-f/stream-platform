@@ -22,6 +22,10 @@
   </li>
 </ul>
 
+<%= if @current_user && @current_user.id == @stream.user_id do %>
+  <button phx-click="start-stream" phx-value-stream_id={@stream.id}> Start stream </button>
+<% end %>
+
 <div class="container">
   <video
     controls

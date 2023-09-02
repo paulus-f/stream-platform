@@ -1,7 +1,13 @@
 defmodule RTMP.Receiver do
   @server_ip {127, 0, 0, 1}
 
-  def run(port: port) do
+  # TODO:
+  # - to read about supervision https://hexdocs.pm/elixir/Supervisor.html
+  # - how pid of Receivers can be store (database or via file)
+  # - add endpoint which creating receivers pid
+  # - add endpoint which removing receivers pid
+
+  def run(port: port, path: path) do
     parent = self()
 
     server_options = %Membrane.RTMP.Source.TcpServer{
@@ -14,8 +20,10 @@ defmodule RTMP.Receiver do
       ],
       socket_handler: fn socket ->
         # On new connection a pipeline is started
-        {:ok, _supervisor, pipeline} = = RtmpServer.StreamProcess.start_link(socket: socket)
+        {:ok, _supervisor, pipeline} = = RtmpServer.StreamProcess.start_link(socket: socket, path: path)
+
         send(parent, {:pipeline_spawned, pipeline})
+
         {:ok, pipeline}
       end
     }
@@ -43,9 +51,3 @@ defmodule RTMP.Receiver do
     end
   end
 end
-
-# TODO:
-# - to read about supervision https://hexdocs.pm/elixir/Supervisor.html
-# - how pid of Receivers can be store (database or via file)
-# - add endpoint which creating receivers pid
-# - add endpoint which removing receivers pid

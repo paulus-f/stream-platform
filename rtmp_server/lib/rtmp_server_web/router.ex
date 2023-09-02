@@ -7,6 +7,8 @@ defmodule RtmpServerWeb.Router do
 
   scope "/api", RtmpServerWeb do
     pipe_through :api
+
+    post "/stream_action/start", StreamActionController, :start
   end
 
   scope "/rtmp", RtmpServerWeb do

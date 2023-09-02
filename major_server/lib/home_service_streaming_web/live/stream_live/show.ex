@@ -2,6 +2,7 @@ require Logger
 
 defmodule HomeServiceStreamingWeb.StreamLive.Show do
   use HomeServiceStreamingWeb, :live_view
+  #use HTTPoison
 
   alias HomeServiceStreaming.Messages
   alias HomeServiceStreaming.Streams
@@ -17,8 +18,6 @@ defmodule HomeServiceStreamingWeb.StreamLive.Show do
       {:ok, _} -> true
       _ -> true
     end
-
-    # Phoenix.PubSub.subscribe(HomeServiceStreamingWeb.PubSub, "live_stream:#{id}")
 
     socket = assign_defaults(session, socket)
 
@@ -71,15 +70,37 @@ defmodule HomeServiceStreamingWeb.StreamLive.Show do
     {:noreply, assign(socket, messages: messages)}
   end
 
-  @impl false
-  def handle_info(:started, socket) do
-    {:noreply, assign(socket, started?: true, live?: true)}
+  @impl true
+  def handle_event("start-stream", %{"stream_id" => stream_id}, socket) do
+    Logger.info("--------------------------------------------")
+    Logger.info("handle_info logger: START STREAM - #{stream_id}")
+    Logger.info("--------------------------------------------")
+
+    # TODO: Add request to rtmp server app
+    case HTTPoison.get("https://postman-echo.com/get") do
+      {:ok, response} ->
+        Logger.info("--------------------------------------------")
+        Logger.info("The stream #{stream_id} has started successfully")
+        Logger.info("--------------------------------------------")
+
+        {:noreply, socket}
+      {:error, reason} ->
+        Logger.info("--------------------------------------------")
+        Logger.info("There is failure to start stream #{stream_id}")
+        Logger.info("--------------------------------------------")
+
+        {:noreply, socket}
+    end
   end
 
-  @impl false
-  def handle_info(:ended, socket) do
-    {:noreply, assign(socket, started?: true, live?: false)}
-  end
+  # @impl true
+  # def handle_info(%{event: "stop-stream", payload: stream_id}, socket) do
+  #   Logger.info("--------------------------------------------")
+  #   Logger.info("handle_info logger: STOP STREAM - #{stream_id}")
+  #   Logger.info("--------------------------------------------")
+
+  #   {:noreply, assign(socket)}
+  # end
 
   defp chat_topic(id) do
     "stream_chat_#{id}"

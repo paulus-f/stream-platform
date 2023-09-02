@@ -11,6 +11,7 @@
 
     <%= label f, :title %>
     <%= text_input f, :title %>
+    <%= hidden_input f, :user_id, value: @user_id %>
     <%= error_tag f, :title %>
 
     <div>
